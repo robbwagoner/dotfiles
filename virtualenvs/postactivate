@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# This hook is run after every virtualenv is activated.
+
+#echo "Ansible setup at ~/git/ansible"
+#source ~/git/ansible/hacking/env-setup -q
+
+alias aws-packages='pip install awscli ssh2ec2 aws-shell'
+
+export VENV="$(basename "${VIRTUAL_ENV}")"
+echo "VENV=${VENV}"
+
+export REMOTE_USER=$USER
+export ANSIBLE_SSH_ARGS="-F $HOME/.ssh/$VENV/config"
+alias ssh="ssh -F $HOME/.ssh/$VENV/config"
+alias scp="scp -F $HOME/.ssh/$VENV/config"
+
+
+case $(uname -s) in 
+  ( Darwin ) 
+    SSH_INFO=/private/tmp/$VENV-ssh-info
+    SSH_AGENT=/private/tmp/$VENV-ssh-agent.sock
+  ;;
+  ( * )
+    SSH_INFO=/tmp/$VENV-ssh-info
+    SSH_AGENT=/tmp/$VENV-ssh-agent.sock
+  ;;
+esac
+
+if [ -f $SSH_INFO ] ; then
+  source $SSH_INFO
+  if ps aux |grep ssh-agent | grep $SSH_AGENT_PID &>/dev/null ; then
+    true
+  else
+    rm $SSH_INFO
+    eval $(ssh-agent -s -a $SSH_AGENT)
+  fi
+else
+  eval $(ssh-agent -s -a $SSH_AGENT)
+fi
+cat <<EOF >$SSH_INFO
+SSH_AUTH_SOCK=${SSH_AUTH_SOCK}
+SSH_AGENT_PID=${SSH_AGENT_PID}
+EOF
+echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}"
+
+load_keys() {
+
+  if [ -f $VIRTUAL_ENV/ssh-keys ] ; then
+    while read key ; do
+      echo "Adding key $key to SSH Agent $SSH_AUTH_SOCK ($SSH_AGENT_PID)"
+      ssh-add $key
+    done < $VIRTUAL_ENV/ssh-keys
+  else
+    echo "No keys in $VIRTUAL_ENV/ssh-keys"
+  fi
+}
+
+
+export AUTOSSH_LOGFILE=/dev/stdout
+export AUTOSSH_PATH=$HOME/bin/ssh
+alias autossh='autossh -M 0 -F $HOME/.ssh/$VENV/config -o "ServerAliveInterval=30" -o "ServerAliveCountMax=3" $BASTION_HOST'
