@@ -48,6 +48,17 @@ esac
 
 
 # ---------------------------------------
+# Powerline
+# ---------------------------------------
+# https://powerline.readthedocs.io/en/master/usage/shell-prompts.html#bash-prompt
+if ! pgrep -f powerline-daemon >/dev/null ; then
+  powerline-daemon -q
+fi
+POWERLINE_BASH_CONTINUATION=1
+POWERLINE_BASH_SELECT=1
+source /usr/local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh
+
+# ---------------------------------------
 # Perlbrew - http://perlbrew.pl
 # ---------------------------------------
 case $OS in
@@ -207,17 +218,6 @@ esac
 
 
 # ---------------------------------------
-# Ruby Virtual
-# ---------------------------------------
-if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
-  printf "Ruby RVM | "
-  source "$HOME/.rvm/scripts/rvm"
-fi 
-#. $HOME/.rvm/bin/rvm
-#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-
-# ---------------------------------------
 # PATH Updates
 # ---------------------------------------
 if [ -d $HOME/bin ] ; then
@@ -227,6 +227,18 @@ fi
 if [ -d $HOME/SpiderOak\ Hive/bin ] ; then
   export PATH=$HOME/SpiderOak\ Hive/bin:$PATH
 fi
+
+
+# ---------------------------------------
+# Ruby Virtual M.
+# ---------------------------------------
+if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
+  printf "Ruby RVM | "
+  source "$HOME/.rvm/scripts/rvm"
+fi 
+#. $HOME/.rvm/bin/rvm
+#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
 
 set -o vi
 
