@@ -1,5 +1,8 @@
 dbg=false
 $dbg && echo .bash_profile
+if [ -f ~/.profile ] ; then
+  source ~/.profile
+fi
 
 OS=$(uname -s)
 printf "$OS: "
@@ -28,7 +31,7 @@ esac
 case $OS in
   ( Darwin )
     # http://www.weinschenker.name/2013-10-08/use-gpgtools-for-ssh-logins-on-mac-os-x/
-    export PATH="/usr/local/MacGPG2/bin:$PATH"
+    #export PATH="/usr/local/MacGPG2/bin:$PATH"
     export GPG_TTY=$(tty)
     GPG_AGENT_FILE="${HOME}/.gnupg/gpg-agent-info"
     if [ -f "${GPG_AGENT_FILE}" ] ; then
@@ -46,17 +49,6 @@ case $OS in
     ;;
 esac
 
-
-# ---------------------------------------
-# Powerline
-# ---------------------------------------
-# https://powerline.readthedocs.io/en/master/usage/shell-prompts.html#bash-prompt
-if ! pgrep -f powerline-daemon >/dev/null ; then
-  powerline-daemon -q
-fi
-POWERLINE_BASH_CONTINUATION=1
-POWERLINE_BASH_SELECT=1
-source /usr/local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh
 
 # ---------------------------------------
 # Perlbrew - http://perlbrew.pl
@@ -106,8 +98,11 @@ fi
 # Powerline 
 # ---------------------------------------
 # https://powerline.readthedocs.org/en/latest/installation.html
-#/usr/local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh
-#/usr/local/bin/powerline-daemon -q
+
+source /usr/local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh
+if ! pgrep -f powerline-daemon >/dev/null ; then
+  /usr/local/bin/powerline-daemon -q
+fi
 
 
 # ---------------------------------------
@@ -218,6 +213,17 @@ esac
 
 
 # ---------------------------------------
+# Ruby Virtual
+# ---------------------------------------
+if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
+  printf "Ruby RVM | "
+  source "$HOME/.rvm/scripts/rvm"
+fi 
+#. $HOME/.rvm/bin/rvm
+#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+
+# ---------------------------------------
 # PATH Updates
 # ---------------------------------------
 if [ -d $HOME/bin ] ; then
@@ -227,18 +233,6 @@ fi
 if [ -d $HOME/SpiderOak\ Hive/bin ] ; then
   export PATH=$HOME/SpiderOak\ Hive/bin:$PATH
 fi
-
-
-# ---------------------------------------
-# Ruby Virtual M.
-# ---------------------------------------
-if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
-  printf "Ruby RVM | "
-  source "$HOME/.rvm/scripts/rvm"
-fi 
-#. $HOME/.rvm/bin/rvm
-#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
 
 set -o vi
 
