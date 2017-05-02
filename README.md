@@ -47,15 +47,17 @@ Install [RVM](https://rvm.io/rvm/install)
 
   * [GPGTools](https://gpgtools.org/)
   * [iTerm2](https://www.iterm2.com/)
+
+#### AppStore
   * Slack
+  * XCode
   * Evernote
+  * Skitch
+
   * Toggl
   * Atom
-  * Skitch
   * VLC
   * Adobe Reader
-  * Skype
-  * Screen Hero
   * Chrome
   * OmniGraffle
   * Keybase
@@ -64,16 +66,19 @@ Install [RVM](https://rvm.io/rvm/install)
   * Bartender 2
   * AndroidFile
   * Flycut
-  * Tuck + Sizeup
-  * JoinMe, GotoMeeting, BlueJeans, Zoom.io
-  * XCode, VirtualBox, ...
+  * Tuck, Sizeup, Cinch
+  * Screen Hero, Skype, JoinMe, GotoMeeting, BlueJeans, Zoom.io
+
+### Virtualbox
+
+    brew cask install virtualbox virtualbox-extension-pack
 
 ### Docker
 
     brew cask install docker
     open /Applications/Docker.app
 
-### Kubernetes & Helm
+#### Kubernetes & Helm
 
     brew install kubernetes-cli
     brew install kubernetes-helm
